@@ -1,15 +1,25 @@
-<header>DocencIA</header>
-
-<main>
-  <div class="layout-container">
-    <aside>Aside</aside>
-    <section>
-      <div class="section-content">
-        section
-        <article>article</article>
-      </div>
-    </section>
+<form (submit)="validarYGenerar(); $event.preventDefault()" style="max-width: 350px; margin: 3rem auto; padding: 2rem; background:#f6f6fa; border-radius: 10px; box-shadow: 0 2px 8px #0001;">
+  <h2 style="text-align:center; color:#2382ad;">Solicita tu Diploma</h2>
+  
+  <div style="margin-bottom: 1.4rem;">
+    <label for="nombre" style="display:block; font-weight: 500;">Nombre</label>
+    <input id="nombre" name="nombre" [(ngModel)]="nombre" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #b0b3bc;">
   </div>
-</main>
-
-<footer>Footer</footer>
+  
+  <div style="margin-bottom: 1.4rem;">
+    <label for="apellidos" style="display:block; font-weight: 500;">Apellidos</label>
+    <input id="apellidos" name="apellidos" [(ngModel)]="apellidos" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #b0b3bc;">
+  </div>
+  
+  <div style="margin-bottom: 1.4rem;">
+    <label for="codigo" style="display:block; font-weight: 500;">Código de seguridad</label>
+    <input id="codigo" name="codigo" [(ngModel)]="codigo" required style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #b0b3bc;">
+    <small style="color:#999;">Solo para asistentes al curso</small>
+  </div>
+  
+  <div *ngIf="errorMsg" style="color: red; margin-bottom: 1rem;">{{ errorMsg }}</div>
+  
+  <button type="submit" style="width: 100%; padding: 10px 0; font-size: 1.1rem; background: #2382ad; color: white; border: none; border-radius: 6px; cursor: pointer;">
+    Obtener diploma
+  </button>
+</form>
