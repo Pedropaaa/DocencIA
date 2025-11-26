@@ -26,89 +26,126 @@ export class HomeComponent {
   }
 
   generarPDF() {
-  const doc = new jsPDF('portrait', 'mm', 'a4');
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
+    const doc = new jsPDF('portrait', 'mm', 'a4');
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
 
-  // Colores inspirados en tu imagen
-  const azulFondo = [26, 55, 96]; // Fondo oscuro principal
-  const azulClaro = [45, 183, 239]; // Azul efecto luz
-  const textoPrincipal = [255, 255, 255];
+    // Colores y estilo inspirados por tu branding e imagen
+    const azulFondo = [26, 55, 96];
+    const azulClaro = [45, 183, 239];
+    const azulOscuro = [23, 50, 99];
+    const grisClaro = [245, 245, 255];
 
-  // Fondo superior azul degradado (simulado con rectángulos)
-  doc.setFillColor(26, 55, 96);
-  doc.rect(0, 0, pageWidth, 60, 'F');
+    // Borde elegante
+    doc.setDrawColor(azulClaro[0], azulClaro[1], azulClaro[2]);
+    doc.setLineWidth(2.5);
+    doc.rect(12, 12, pageWidth - 24, pageHeight - 24, 'S');
 
-  // Título
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(36);
-  doc.setTextColor(255, 255, 255);
-  doc.text('DocencIA', pageWidth / 2, 25, { align: 'center' });
+    // Fondo azul muy claro para el encabezado
+    doc.setFillColor(azulFondo[0], azulFondo[1], azulFondo[2]);
+    doc.rect(12, 12, pageWidth - 24, 45, 'F');
 
-  // Subtítulo
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Fórmate para el futuro educativo.', pageWidth / 2, 38, { align: 'center' });
-
-  // Logo centrado, debajo del título
-  // Ajusta estos valores si quieres el logo más pequeño o grande según resultado visual
-  const imgY = 50;
-  const imgWidth = 90;
-  const imgHeight = 95;
-  const imgX = (pageWidth - imgWidth) / 2;
-
-  const imgUrl = 'assets/img/Docencia.jpg'; // Usa el path correcto
-
-  this.getBase64ImageFromURL(imgUrl).then(imgDataUrl => {
-    // Imagen decorativa
-    doc.addImage(imgDataUrl, 'JPEG', imgX, imgY, imgWidth, imgHeight, undefined, 'FAST');
-
-    // Cuerpo del diploma
-    doc.setTextColor(30, 30, 30);
-    doc.setFontSize(22);
-    doc.setFont('times', 'bolditalic');
-    doc.text('Diploma de Formación', pageWidth / 2, imgY + imgHeight + 15, { align: 'center' });
-
-    doc.setDrawColor(45, 183, 239);
-    doc.setLineWidth(1.5);
-    doc.line(pageWidth*0.15, imgY + imgHeight + 22, pageWidth*0.85, imgY + imgHeight + 22);
-
-    doc.setFontSize(16);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Otorgado a:', 30, imgY + imgHeight + 35);
-    doc.setFontSize(20);
+    // Título
     doc.setFont('helvetica', 'bold');
-    doc.text(`${this.nombre} ${this.apellidos}`, 30, imgY + imgHeight + 48);
+    doc.setFontSize(34);
+    doc.setTextColor(255, 255, 255);
+    doc.text('DocencIA', pageWidth / 2, 32, { align: 'center' });
 
-    doc.setFont('helvetica', 'normal');
+    // Subtítulo
     doc.setFontSize(13);
-    doc.text('Por la participación en la formación:', 30, imgY + imgHeight + 65);
-    doc.setFont('times', 'italic');
-    doc.setFontSize(15);
-    doc.text('Integración de la IA en el ámbito docente', 30, imgY + imgHeight + 78);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Fórmate para el futuro educativo.', pageWidth / 2, 42, { align: 'center' });
 
-    // Pie de diploma
-    doc.setFont('times', 'normal');
-    doc.setFontSize(12);
-    doc.text(`Empresa: DocencIA`, 30, pageHeight - 35);
-    doc.text(`Ponente: Pedro Palacín Ruiz de la Escalera`, 30, pageHeight - 27);
-    doc.setTextColor(150,150,150);
-    doc.setFontSize(10);
-    doc.text('Fecha de expedición:', 30, pageHeight - 16);
-    doc.text(`${new Date().toLocaleDateString()}`, 70, pageHeight - 16);
+    // Logo centrado, dimensionando según proporción de la imagen attach (ajustar si prefieres)
+    const imgY = 52;
+    const imgWidth = 70;
+    const imgHeight = 70;
+    const imgX = (pageWidth - imgWidth) / 2;
 
-    // Marca de agua o nota digital si quieres:
-    doc.setFontSize(15);
-    doc.setTextColor(180,200,255);
-    doc.text('DocencIA', pageWidth - 40, pageHeight - 10, { align: 'center', angle: -12 });
+    // Usa la URL pública para la imagen adjuntada
+    const imgUrl = "https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/0c5b3ce1-4556-4ec8-9c7a-22ec8bc91a2b";
 
-    doc.save('Diploma-DocencIA.pdf');
-  })
-  .catch(err => {
-    console.error('Error cargando imagen:', err);
-    doc.save('Diploma-DocencIA.pdf');
-  });
-}
+    this.getBase64ImageFromURL(imgUrl).then(imgDataUrl => {
+      doc.addImage(imgDataUrl, 'JPEG', imgX, imgY, imgWidth, imgHeight, undefined, 'FAST');
+
+      // Sección principal del diploma
+      let cursorY = imgY + imgHeight + 15;
+      doc.setFont('times', 'bolditalic');
+      doc.setFontSize(24);
+      doc.setTextColor(azulOscuro[0], azulOscuro[1], azulOscuro[2]);
+      doc.text('Diploma de Formación Certificada', pageWidth / 2, cursorY, { align: 'center' });
+
+      cursorY += 12;
+      doc.setDrawColor(azulClaro[0], azulClaro[1], azulClaro[2]);
+      doc.setLineWidth(1);
+      doc.line(pageWidth * 0.18, cursorY, pageWidth * 0.82, cursorY);
+
+      cursorY += 16;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(16);
+      doc.setTextColor(30, 30, 30);
+      doc.text('Otorgado a:', pageWidth / 2, cursorY, { align: 'center' });
+
+      cursorY += 11;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.text(`${this.nombre} ${this.apellidos}`, pageWidth / 2, cursorY, { align: 'center' });
+
+      cursorY += 14;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(14);
+      doc.setTextColor(60, 60, 60);
+      doc.text('Por su participación y aprovechamiento en la formación:', pageWidth / 2, cursorY, { align: 'center' });
+
+      cursorY += 10;
+      doc.setFont('times', 'italic');
+      doc.setFontSize(16);
+      doc.setTextColor(azulOscuro[0], azulOscuro[1], azulOscuro[2]);
+      doc.text('Integración de la IA en el ámbito docente', pageWidth / 2, cursorY, { align: 'center' });
+
+      // Datos empresa y ponente
+      cursorY += 18;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(13);
+      doc.setTextColor(30, 30, 30);
+      doc.text(`Empresa: DocencIA`, pageWidth / 2, cursorY, { align: 'center' });
+      cursorY += 8;
+      doc.text(`Ponente: Pedro Palacín Ruiz de la Escalera`, pageWidth / 2, cursorY, { align: 'center' });
+
+      // Sello/firma y fecha
+      cursorY += 24;
+      doc.setDrawColor(200, 200, 200);
+      doc.rect(pageWidth * 0.6, cursorY - 10, 50, 24, 'S'); // Caja para firma/sello
+      doc.setFont('times', 'italic');
+      doc.setFontSize(12);
+      doc.text('Firma y sello', pageWidth * 0.6 + 25, cursorY + 5, { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(12);
+      doc.text('_______________________', pageWidth * 0.6 + 25, cursorY + 13, { align: 'center' });
+
+      // Fecha (abajo izquierda)
+      doc.setFontSize(12);
+      doc.setTextColor(60, 60, 60);
+      doc.text('Fecha de expedición:', 22, pageHeight - 28);
+      doc.text(`${new Date().toLocaleDateString()}`, 58, pageHeight - 28);
+
+      // Código de diploma o QR - sitio para futuro
+      doc.setFontSize(10);
+      doc.setTextColor(120, 140, 180);
+      doc.text('Código de diploma: DOC-IA-' + new Date().getFullYear().toString().slice(-2) + (Math.floor(1000 + Math.random() * 9000)), pageWidth - 70, pageHeight - 18);
+
+      // Marca de agua
+      doc.setFontSize(30);
+      doc.setTextColor(225, 235, 255);
+      doc.text('DocencIA', pageWidth / 2, pageHeight - 16, { align: 'center', angle: -12 });
+
+      doc.save('Diploma-DocencIA.pdf');
+    }).catch(err => {
+      console.error('Error cargando imagen:', err);
+      doc.save('Diploma-DocencIA.pdf');
+    });
+  }
+
 
 
 
